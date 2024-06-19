@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+
+{% block page_content %}
+{% if messages %}
+{% for message in messages %}
+<div class="row mt-3">
+    <div class="col">
+        <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+            <strong>{{message.tags.upper}}!</strong> {{ message|safe }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% endif %}
+
+<h1 class="h3 mb-0 text-gray-800">{{subtitle_page}}</h1>
+<div class="row mt-4">
+    <div class="col ">
+        <ul class="list-group">
+
+            {% for data_reset in data_reset_list %}
+            <li class="list-group-item">
+                <a class="btn btn-danger btn-icon-split" data-toggle="collapse" href="#collapseReset{{data_reset}}"
+                    role="button" aria-expanded="false" aria-controls="collapseReset{{data_reset}}">
+                    <span class="icon text-white-50">
+                        <i class="fas fa-trash"></i>
+                    </span>
+                    <span class="text">Reset {{data_reset}}</span>
+                </a>
+                <div class="row mt-3">
+                    <div class="col">
+                        <div class="alert alert-warning collapse" role="alert" id="collapseReset{{data_reset}}">
+                            <h4 class="alert-heading">Reset {{data_reset}}</h4>
+                            <p>Apakah Anda yakin ingin menghapus seluruh data {{data_reset}}? Klik tombol <span
+                                    class='font-weight-bold'>Reset</span>
+                                jika sudah yakin.
+                            </p>
+                            <p class="mb-0"><span class='font-weight-bold'>Perhatikan!</span> Data yang sudah dihapus
+                                tidak bisa
+                                dikembalikan seperti semula!</p>
+                            <hr>
+                            {% with "administrator_IT:"|add:data_reset|add:"_reset" as template %}
+                            <form action="{% url template %}" method="post">
+                                {% csrf_token %}
+                                <button class="btn btn-danger" type="submit" name='btnReset{{data_reset}}'
+                                    value='reset'>Reset</button>
+                            </form>
+                            {% endwith %}
+                        </div>
+                    </div>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+{% endblock page_content %}

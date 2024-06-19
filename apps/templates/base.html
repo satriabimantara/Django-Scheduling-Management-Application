@@ -1,0 +1,234 @@
+{% load static %}
+{% load auth_extras %}
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        {% include 'snippets/styles.html' %}
+        {% block app_css %}
+        {% endblock app_css %}
+        <title>{{title_page}}</title>
+    </head>
+
+    <body id='page-top'>
+        <div id="wrapper">
+
+            <!-- Sidebar -->
+            <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+                <!-- Sidebar - Brand -->
+                <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{% url 'index' %}">
+                    <div class="sidebar-brand-icon rotate-n-15">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <div class="sidebar-brand-text mx-3">Manajemen Penjadwalan</div>
+                </a>
+
+                <!-- Divider -->
+                <hr class="sidebar-divider my-0">
+
+                <!-- Nav Item - Dashboard -->
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'index' %}">
+                        <i class="fas fa-fw fa-tachometer-alt"></i>
+                        <span>Dashboard</span></a>
+                </li>
+
+
+                <!-- Divider -->
+                <hr class="sidebar-divider">
+
+
+                {% if request.user|has_group:'administrator' %}
+                <!-- Heading -->
+                <div class="sidebar-heading">
+                    Administator
+                </div>
+
+                <!-- Nav Item - Administrator IT -->
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsDatabaseSchedule"
+                        aria-expanded="true" aria-controls="collapsDatabaseSchedule">
+                        <i class="fas fa-tasks"></i>
+                        <span>Kelola Jadwal</span>
+                    </a>
+                    <div id="collapsDatabaseSchedule" class="collapse" aria-labelledby="headingTwo"
+                        data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <h6 class="collapse-header">Komponen Penjadwalan:</h6>
+                            <a class="collapse-item" href="{% url 'administrator_IT:index' %}">Dashboard</a>
+                            <a class="collapse-item" href="{% url 'administrator_IT:guru_list' %}">Guru</a>
+                            <a class="collapse-item" href="{% url 'administrator_IT:mata_pelajaran_list' %}">Mata
+                                Pelajaran</a>
+                            <a class="collapse-item" href="{% url 'administrator_IT:kelas_list' %}">Kelas</a>
+                            <a class="collapse-item" href="{% url 'administrator_IT:waktu_list' %}">Waktu Pelajaran</a>
+                            <a class="collapse-item" href="{% url 'administrator_IT:ruangan_list' %}">Ruangan</a>
+                            <a class="collapse-item"
+                                href="{% url 'administrator_IT:detail_mata_pelajaran_list' %}">Mapping
+                                Mata Pelajaran</a>
+                        </div>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'jadwal_list' %}">
+                        <i class="fas fa-search"></i>
+                        <span>Lihat Jadwal</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'administrator_IT:reset_index' %}">
+                        <i class="fas fa-trash-alt"></i>
+                        <span>Reset Data</span></a>
+                </li>
+
+                <!-- Divider -->
+                <hr class="sidebar-divider">
+                {% endif %}
+
+                <!-- Heading -->
+
+                {% if request.user|has_group:"pimpinan" %}
+                <div class="sidebar-heading">
+                    Pimpinan
+                </div>
+
+                <!-- Nav Item - Pimpinan -->
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse"
+                        data-target="#collapsePimpinanValidasiJadwal" aria-expanded="true"
+                        aria-controls="collapsePimpinanValidasiJadwal">
+                        <i class="fas fa-unlock-alt"></i>
+                        <span>Validasi Jadwal</span>
+                    </a>
+                    <div id="collapsePimpinanValidasiJadwal" class="collapse" aria-labelledby="headingTwo"
+                        data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <a class="collapse-item" href="{% url 'jadwal_list' %}">Lock/Unlock
+                                Jadwal</a>
+                        </div>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'pimpinan:revisi_jadwal_list' %}">
+                        <i class="fas fa-edit"></i>
+                        <span>Lihat Revisi Jadwal</span></a>
+                </li>
+                <!-- Divider -->
+                <hr class="sidebar-divider">
+                {% endif %}
+
+
+                {% if request.user|has_group:'tenagapengajar' %}
+                <!-- Heading -->
+                <div class="sidebar-heading">
+                    Tenaga Pengajar
+                </div>
+
+
+
+                <!-- Nav Item - Tenaga Pengajar -->
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'tenagapengajar:perbaiki_revisi_jadwal' %}">
+                        <i class="fas fa-undo"></i>
+                        <span>Perbaiki Revisi Jadwal</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'jadwal_list' %}">
+                        <i class="fas fa-search"></i>
+                        <span>Lihat Jadwal</span></a>
+                </li>
+                <hr class="sidebar-divider">
+                {% endif %}
+
+
+                {% if request.user|has_group:'siswa' %}
+                <!-- Heading -->
+                <div class="sidebar-heading">Siswa</div>
+
+
+
+                <!-- Nav Item - Tenaga Pengajar -->
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'jadwal_list' %}">
+                        <i class="fas fa-search"></i>
+                        <span>Lihat Jadwal</span></a>
+                </li>
+                <hr class="sidebar-divider">
+                {% endif %}
+
+
+
+
+                <!-- Sidebar Toggler (Sidebar) -->
+                <div class="text-center d-none d-md-inline">
+                    <button class="rounded-circle border-0" id="sidebarToggle"></button>
+                </div>
+
+            </ul>
+            <!-- End of Sidebar -->
+
+            <!-- Content Wrapper -->
+            <div id="content-wrapper" class="d-flex flex-column">
+
+                <!-- Main Content -->
+                <div id="content">
+
+                    <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+
+                        <!-- Sidebar Toggle (Topbar) -->
+                        <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                            <i class="fa fa-bars"></i>
+                        </button>
+
+                        <!-- Topbar Search -->
+                        {% comment %} <form
+                            class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+                            <div class="input-group">
+                                <input type="text" class="form-control bg-light border-0 small"
+                                    placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary" type="button">
+                                        <i class="fas fa-search fa-sm"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </form> {% endcomment %}
+
+                        {% block topbar %}
+                        {% endblock topbar %}
+                        {% include 'snippets/topbar.html' %}
+                    </nav>
+
+                    <!-- Begin Page Content -->
+                    <div class="container-fluid">
+
+                        {% block page_content %}
+
+                        {% endblock page_content %}
+
+                    </div>
+                    <!-- /.container-fluid -->
+
+                </div>
+                <!-- End of Main Content -->
+
+                <!-- Footer -->
+                {% include 'snippets/footer.html' %}
+                <!-- End of Footer -->
+
+            </div>
+            <!-- End of Content Wrapper -->
+
+        </div>
+
+
+        {% include 'snippets/modals_index.html' %}
+        {% include 'snippets/scripts.html' %}
+        {% block javascripts_extra_code %}{% endblock javascripts_extra_code %}
+    </body>
+
+</html>

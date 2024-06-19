@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+
+{% block page_content %}
+
+{% if messages %}
+{% for message in messages %}
+<div class="row mt-3">
+    <div class="col">
+        <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+            <strong>{{message.tags.upper}}!</strong> {{ message|safe }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% endif %}
+<div class="row">
+    <div class="col">
+        <a href="{% url 'administrator_IT:mata_pelajaran_create' %}" class="btn btn-success btn-icon-split">
+            <span class="icon text-white-50">
+                <i class="fas fa-plus-circle"></i>
+            </span>
+            <span class="text">Tambah Data Mapel</span>
+        </a>
+    </div>
+</div>
+<div class="row mt-3">
+    <div class="col">
+        <div class="card shadow mb-4">
+            <a href="#collapseCardMataPelajaran" class="d-block card-header py-3" data-toggle="collapse" role="button"
+                aria-expanded="true" aria-controls="collapseCardMataPelajaran">
+                <h6 class="m-0 font-weight-bold text-primary">Data Mata Pelajaran</h6>
+            </a>
+            <div class="collapse show" id="collapseCardMataPelajaran">
+                <div class="card-body">
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="tableMataPelajaran" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Nomor</th>
+                                    <th>Kode Mata Pelajaran</th>
+                                    <th>Mata Pelajaran</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                {% for mapel in all_mapel %}
+                                <tr>
+                                    <td>{{forloop.counter}}</td>
+                                    <td>{{mapel.kode_mapel}}</td>
+                                    <td>{{mapel.mapel}}</td>
+                                    <td>
+                                        <div class="d-flex justify-content-end">
+                                            <a href="{% url 'administrator_IT:mata_pelajaran_update' mapel.id %}"
+                                                class="btn btn-warning btn-icon-split btn-sm">
+                                                <span class="icon text-white-50">
+                                                    <i class="fas fa-exclamation-triangle"></i>
+                                                </span>
+                                                <span class="text">Edit</span>
+                                            </a>
+                                            <a href="{% url 'administrator_IT:mata_pelajaran_delete' mapel.id %}"
+                                                class="btn btn-danger btn-icon-split btn-sm">
+                                                <span class="icon text-white-50">
+                                                    <i class="fas fa-trash"></i>
+                                                </span>
+                                                <span class="text">Hapus</span>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock page_content %}

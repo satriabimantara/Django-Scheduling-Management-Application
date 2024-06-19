@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+
+{% block page_content %}
+{% if messages %}
+{% for message in messages %}
+<div class="row mt-3">
+    <div class="col">
+        <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+            <strong>{{message.tags.upper}}!</strong> {{ message|safe }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% endif %}
+<div class="row">
+    <div class="col">
+        <a href="{% url 'administrator_IT:guru_create' %}" class="btn btn-success btn-icon-split">
+            <span class="icon text-white-50">
+                <i class="fas fa-plus-circle"></i>
+            </span>
+            <span class="text">Tambah Data Guru</span>
+        </a>
+    </div>
+</div>
+
+<div class="row mt-3">
+    <div class="col">
+        <!-- DataTales Example -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Data Guru</h6>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="tableGuru" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>NIP</th>
+                                <th>Nama Guru</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            {% for guru in guru_list %}
+                            <tr>
+                                <td>{{guru.nip}}</td>
+                                <td>{{guru.nama_lengkap}}</td>
+                                <td>
+                                    <div class="d-flex justify-content-end">
+                                        <a href="{% url 'administrator_IT:guru_update' guru.id %}"
+                                            class="btn btn-warning btn-icon-split btn-sm">
+                                            <span class="icon text-white-50">
+                                                <i class="fas fa-exclamation-triangle"></i>
+                                            </span>
+                                            <span class="text">Edit</span>
+                                        </a>
+                                        <a href="{% url 'administrator_IT:guru_delete' guru.id %}"
+                                            class="btn btn-danger btn-icon-split btn-sm">
+                                            <span class="icon text-white-50">
+                                                <i class="fas fa-trash"></i>
+                                            </span>
+                                            <span class="text">Hapus</span>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+{% endblock page_content %}

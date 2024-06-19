@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+
+{% block page_content %}
+<div class="jumbotron">
+    <h1 class="display-4">{{subtitle_page}}</h1>
+    <p class="lead">Are you sure want to delete this {{entity}}? Deleted data cannot be restored as before</p>
+    <hr class="my-4">
+
+    <p><span class="font-weight-bold">{{object_deleted}}</span> </p>
+    <p class="card-text">{{sub_object_deleted}}</p>
+    <form method="POST">
+        {% csrf_token %}
+        <a href="{% url back_url %}" class='btn btn-secondary btn-sm'>Kembali</a>
+        <button type="submit" class='btn btn-danger btn-sm'>Hapus</button>
+    </form>
+</div>
+{% endblock page_content %}

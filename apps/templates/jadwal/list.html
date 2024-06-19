@@ -1,0 +1,183 @@
+{% extends 'base.html' %}
+{% load auth_extras %}
+
+
+{% block page_content %}
+{% if messages %}
+{% for message in messages %}
+<div class="row mt-3">
+    <div class="col">
+        <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+            <strong>{{message.tags.upper}}!</strong> {{ message|safe }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% endif %}
+
+
+{% if request.user|has_group:'tenagapengajar' %}
+<div class="d-flex justify-content-start">
+    <article>
+        <a href="{% url 'tenagapengajar:jadwal_create' %}" class="btn btn-success btn-icon-split">
+            <span class="icon text-white-50">
+                <i class="fas fa-plus-square"></i>
+            </span>
+            <span class="text">Tambah Jadwal</span>
+        </a>
+    </article>
+</div>
+
+{% endif %}
+
+
+{% if request.user|has_group:'pimpinan' %}
+<div class="d-flex justify-content-between">
+    <article>
+        <a href="{% url 'pimpinan:validasi_jadwal' 'Unlock' %}" class="btn btn-warning btn-icon-split">
+            <span class="icon text-white-50">
+                <i class="fas fa-lock-open"></i>
+            </span>
+            <span class="text">Unlock Semua Jadwal</span>
+        </a>
+    </article>
+    <article>
+        <a href="{% url 'pimpinan:validasi_jadwal' 'Lock' %}" class="btn btn-danger btn-icon-split">
+            <span class="icon text-white-50">
+                <i class="fas fa-lock"></i>
+            </span>
+            <span class="text">Lock Semua Jadwal</span>
+        </a>
+    </article>
+</div>
+
+{% endif %}
+
+
+{% for hari, jadwals in jadwal_list.jadwal_list.items %}
+<div class="row mt-3">
+    <div class="col">
+        <div class="card shadow mb-4">
+            <a href="#collapseJadwal{{hari}}" class="d-block card-header py-3" data-toggle="collapse" role="button"
+                aria-expanded="true" aria-controls="collapseJadwal{{hari}}">
+                <h6 class="m-0 font-weight-bold text-primary">{{hari.upper}}</h6>
+            </a>
+            <div class="collapse show" id="collapseJadwal{{hari}}">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col">
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" id='tableJadwal{{hari.capitalize}}' width="100%"
+                                        cellspacing="0">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Kelas Peserta</th>
+                                                <th scope="col">Jam ke-</th>
+                                                <th scope="col">Guru</th>
+                                                <th scope="col">Mapel</th>
+                                                <th scope="col">Ruangan</th>
+                                                <th scope="col">Status</th>
+                                                <th scope="col">Aksi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for jadwal in jadwals %}
+
+                                            {% if request.user|has_group:'siswa' %}
+                                            {% if jadwal.status_validasi == "Lock" %}
+                                            <tr>
+                                                <td>{{jadwal.detail_pelajaran.kelas_peserta}}</td>
+                                                <td>{{jadwal.detail_waktu.waktu.nama_waktu}}</td>
+                                                <td>{{jadwal.guru.nama_lengkap}}</td>
+                                                <td>{{jadwal.detail_pelajaran.mapel.mapel}}</td>
+                                                <td>{{jadwal.ruangan.nama_ruangan}}</td>
+                                                <td>{{jadwal.status_validasi}}</td>
+                                                <td>-</td>
+                                            </tr>
+                                            {% endif %}
+                                            {% endif %}
+                                            {% if request.user|exclude_group:"siswa" %}
+                                            <tr>
+                                                <td>{{jadwal.detail_pelajaran.kelas_peserta}}</td>
+                                                <td>{{jadwal.detail_waktu.waktu.nama_waktu}}</td>
+                                                <td>{{jadwal.guru.nama_lengkap}}</td>
+                                                <td>{{jadwal.detail_pelajaran.mapel.mapel}}</td>
+                                                <td>{{jadwal.ruangan.nama_ruangan}}</td>
+                                                <td>{{jadwal.status_validasi}}</td>
+                                                <td>
+                                                    <div class="d-flex justify-content-between">
+                                                        <div class="btn-group" role="group"
+                                                            aria-label="Button Group Label User">
+
+                                                            {% if request.user|has_group:'tenagapengajar' %}
+                                                            <a href="{% url 'tenagapengajar:jadwal_update' jadwal.id %}"
+                                                                class="btn btn-warning btn-icon-split btn-sm">
+                                                                <span class="icon text-white-50">
+                                                                    <i class="fas fa-exclamation-triangle"></i>
+                                                                </span>
+                                                                <span class="text">Edit</span>
+                                                            </a>
+                                                            {% endif %}
+
+
+                                                            {% if request.user|has_group:'pimpinan' %}
+                                                            <a href="{% url 'pimpinan:revisi_jadwal_create' jadwal.id  %}"
+                                                                class="btn btn-secondary btn-icon-split btn-sm">
+                                                                <span class="icon text-white-50">
+                                                                    <i class="fas fa-reply-all"></i>
+                                                                </span>
+                                                                <span class="text">Revisi</span>
+                                                            </a>
+                                                            {% if jadwal.status_validasi == "Lock" %}
+                                                            <a href="{% url 'pimpinan:unlock_specific_jadwal' jadwal.id  %}"
+                                                                class="btn btn-success btn-icon-split btn-sm">
+                                                                <span class="icon text-white-50">
+                                                                    <i class="fas fa-lock-open"></i>
+                                                                </span>
+                                                                <span class="text">Unlock</span>
+                                                            </a>
+                                                            {% else %}
+                                                            <a href="{% url 'pimpinan:lock_specific_jadwal' jadwal.id  %}"
+                                                                class="btn btn-primary btn-icon-split btn-sm">
+                                                                <span class="icon text-white-50">
+                                                                    <i class="fas fa-lock"></i>
+                                                                </span>
+                                                                <span class="text">Lock</span>
+                                                            </a>
+                                                            {% endif %}
+                                                            {% endif %}
+
+
+                                                            {% if request.user|has_group:'tenagapengajar' %}
+                                                            <a href="{% url 'tenagapengajar:jadwal_delete' jadwal.id %}"
+                                                                class="btn btn-danger btn-icon-split btn-sm">
+                                                                <span class="icon text-white-50">
+                                                                    <i class="fas fa-trash"></i>
+                                                                </span>
+                                                                <span class="text">Hapus</span>
+                                                            </a>
+                                                            {% endif %}
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            {% endif %}
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+{% endblock page_content %}
